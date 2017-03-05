@@ -30,7 +30,7 @@ items:
 rules: 1) 
 """
 """
-Track settiings:
+Track settings:
 0 - not used
 1 - 6: home for P1, 7,8,9: hangar, taking off, landed
 10 - not used
@@ -45,6 +45,25 @@ Medium board:
 
 Large board:
 40 - 91: main course
+
+Track settings version 2:
+0 - not used
+1 - 6: home for all players, 7,8,9: hangar, taking off, landed
+10 - 45: main course
+Every player runs 34 tracks
+P1: 10 - 43
+P2: 19 - 45, 10 - 16
+P3: 28 - 45, 10 - 25
+P4: 37 - 45, 10 - 34
+
+
+P1: 11,15,19,23,27,31,35,39,43
+P2: 20,24,28,32,36,40,44,12,16
+P3: 29,33,37,41,45,13,17,21,25
+P4: 38,42,10,14,18,22,26,30,34
+
+10 - 61: main course
+
 """
 
 """
@@ -68,10 +87,15 @@ Players rolls the dice when:
 
 class Game():
 	"""Game"""
-	def __init__(self, arg):
-		self.arg = arg
+	def __init__(self):
+		# self.numPlayers = numPlayers
+		self.numPlayers = 0
+		self.maxNumPlayers = 4
+		self.minNumPlayers = 2
+		self.players = []
+		# self.players = [Player('ann',0,'red','Small'), Player('bob',1,'blue','Small')]
 
-	def run():
+	def run(self):
 		print "run the game"
 		"""
 		# wait for players to connect
@@ -104,24 +128,41 @@ class Game():
 
 		send message to everyone
 		"""
+		while self.numPlayers < self.maxNumPlayers:
+			name = raw_input('Enter player name: ')
+			# run small board for now
+			player = Player(name,self.numPlayers,'Small')
+			self.players.append(player)
+			self.numPlayers += 1
 
-	def initialize():
-		print "initialize the game"
-
-	def moveChess(playerID, chessID):
-		# check if move is legal
-		print "move a chess of player"
+		current_player = 0
+		while True:
+			print "Player %d's turn" % current_player
+			if self.players[current_player].isMuted():
+				self.players[current_player].UnMute()
+				current_player = (current_player + 1) % len(self.players)
+				continue
+			print "Player %d's chess list:" % current_player, self.players[current_player].getChessList()
+			dice = self.players[current_player].rollDice()
+			print "Player %d rolled %d" %(current_player, dice)
+			cid = int(raw_input("Which chess to move?"))
+			self.players[current_player].Move(cid, dice)
+			print "Player %d's chess list:" % current_player, self.players[current_player].getChessList()
+			if self.players[current_player].Wins():
+				print "Player %d wins!!!" % current_player
+				break
+			if dice != 6:
+				current_player = (current_player + 1) % len(self.players)
 
 class Player():
 	"""Player"""
-	def __init__(self, playerName, playerID, colorAssigned, boardSize):
+	def __init__(self, playerName, playerID, boardSize):
 		self.name = playerName
 		self.id = playerID
-		self.color = colorAssigned
 		self.boardSize = boardSize
 		self.chess = [-1, -1, -1, -1]
 		self.items = {'thunder':0, 'shield':0, 'cheat_dice':0}
-		self.isReady = False
+		# self.isReady = False
 		self.isMuted = False
 
 	def rollDice(self):
@@ -141,19 +182,52 @@ class Player():
 			# return 0
 
 	def Move(self, chessID, dice):
+		print "move chess %d forward by %d" %(chessID, dice)
 		# chess in hangar
-		if dice == 6 and self.chess[chessID] == -1:
-			self.chess[chessID] = 0
+		if self.chess[chessID] == -1:
+			if dice == 6:
+				self.chess[chessID] = 0
+				# print 'i should exit here'
+			# return
 		# chess ready to take off
-		if self.chess[chessID] == 0:
-			# track differs by boardSize and player color
+		elif self.chess[chessID] == 0:
+			if self.boardSize == "Small":
+				self.chess[chessID] += dice
+			else:
+				# for medium and large board, main course starts at 8
+				self.chess[chessID] += 7 + dice
+
+		elif self.chess[chessID] < 7:
+			# ru;es at home zone same for all board sizes
+			if self.chess[chessID] + dice <= 7:
+				self.chess[chessID] += dice
+			else:
+				self.chess[chessID] = 14 - (self.chess[chessID] + dice)
+		elif self.chess[chessID] == 7:
+			return
+		else:
+			# this section should not be entered when board size is small
+			assert(self.boardSize != "Small")
+			'''
 			if self.boardSize == "Small":
 				self.chess[chessID] += dice
 			elif self.boardSize == "Medium":
 				self.chess[chessID] += dice
 			elif self.boardSize == "Large":
 				self.chess[chessID] += dice
+			'''
+			
+		print "chess %d position: %d" %(chessID, self.chess[chessID])
 
+
+	def canJump(self, chessID, position):
+		# depend on track...
+		if position % self.playerID == 0:
+			return True
+		return False
+
+	def Jump(self, chessID):
+		self.chess[chessID] += 4
 
 	# def makeMove(self):
 
@@ -163,17 +237,14 @@ class Player():
 	def getID(self):
 		return self.id
 
-	def getColor(self):
-		return self.color
-
 	def getChessList(self):
-		return self.chess.deepcopy()
+		return list(self.chess)
 
 	def getChessPosition(self, index):
 		return self.chess[index]
 
 	def getItemsList(self):
-		return self.items.deepcopy()
+		return list(self.items)
 
 	def getNumThunders(self):
 		return self.items['thunder']

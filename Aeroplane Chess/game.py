@@ -143,6 +143,11 @@ class Game():
 				current_player = (current_player + 1) % len(self.players)
 				continue
 			print "Player %d's chess list:" % current_player, self.players[current_player].getChessList()
+			print "Player %d's items list:" % current_player, self.players[current_player].getItemsList()
+
+			item = raw_input('Use item?')
+			# if self.players[current_player].getItemsList()
+
 			dice = self.players[current_player].rollDice()
 			print "Player %d rolled %d" %(current_player, dice)
 			cid = int(raw_input("Which chess to move?"))

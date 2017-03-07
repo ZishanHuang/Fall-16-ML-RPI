@@ -52,33 +52,33 @@ class Board:
 	def getEmpty(self):
 		return self.x, self.y
 
-	def isLegal(self, action):
-		if action == 'l' and self.y != 0:
+	def isLegal(self, direction):
+		if direction == 'l' and self.y != 0:
 			return True
-		elif action == 'r' and self.y != self.size - 1:
+		elif direction == 'r' and self.y != self.size - 1:
 			return True
-		elif action == 'u' and self.x != 0:
+		elif direction == 'u' and self.x != 0:
 			return True
-		elif action == 'd' and self.x != self.size - 1:
+		elif direction == 'd' and self.x != self.size - 1:
 			return True
 		else:
 			return False
 
 	# move the empty location up, down, left or right
-	def move(self, action):
-		if not self.isLegal(action):
-			print "Illegal move:", action
+	def move(self, direction):
+		if not self.isLegal(direction):
+			print "Illegal move:", direction
 			import copy
 			return copy.deepcopy(self)
 		i = self.x
 		j = self.y
-		if action == 'l':
+		if direction == 'l':
 			self.__swap(i,j,i,j-1)
-		elif action == 'r':
+		elif direction == 'r':
 			self.__swap(i,j,i,j+1)
-		elif action == 'u':
+		elif direction == 'u':
 			self.__swap(i,j,i-1,j)
-		elif action == 'd':
+		elif direction == 'd':
 			self.__swap(i,j,i+1,j)
 		else:
 			# should not be in this else statement
@@ -116,9 +116,6 @@ class Board:
 		print sep
 
 if __name__ == '__main__':
-	"""
-		Testing the game
-	"""
 	# Create and print a sample board
 	b1 = Board(3, [1,2,0,3,4,5,6,7,8])
 	print 'Sample board'
@@ -143,12 +140,13 @@ if __name__ == '__main__':
 	# Start game
 	# Enter r/l/u/d for right/left/up/down
 	while True:
-		action = raw_input('Enter move (l/r/u/d/q):')
-		if action == 'q':
+		direction = raw_input('Enter move (l/r/u/d/q):')
+		if direction == 'q':
 			break
-		b1 = b1.move(action)
+		b1 = b1.move(direction)
 		if b1.wins():
 			print 'You Win!!!'
 			break
+
 
 	print 'exit the game'

@@ -1,4 +1,5 @@
 import random
+import copy
 
 class Board:
 	def __init__(self, n, nums=None):
@@ -43,7 +44,6 @@ class Board:
 		return self.board[i][j]
 
 	def getBoardAsGrid(self):
-		import copy
 		return copy.deepcopy(self.board)
 
 	def getBoardAsList(self):
@@ -64,28 +64,32 @@ class Board:
 		else:
 			return False
 
-	# move the empty location up, down, left or right
+	# return a new board that moved the empty location up, down, left or right
 	def move(self, action):
-		if not self.isLegal(action):
+		new_board = copy.deepcopy(self)
+		if not new_board.isLegal(action):
 			print "Illegal move:", action
-			import copy
-			return copy.deepcopy(self)
-		i = self.x
-		j = self.y
+			return new_board
+		i = new_board.x
+		j = new_board.y
 		if action == 'l':
-			self.__swap(i,j,i,j-1)
+			new_board.__swap(i,j,i,j-1)
+			new_board.y = j-1
 		elif action == 'r':
-			self.__swap(i,j,i,j+1)
+			new_board.__swap(i,j,i,j+1)
+			new_board.y = j+1
 		elif action == 'u':
-			self.__swap(i,j,i-1,j)
+			new_board.__swap(i,j,i-1,j)
+			new_board.x = i-1
 		elif action == 'd':
-			self.__swap(i,j,i+1,j)
+			new_board.__swap(i,j,i+1,j)
+			new_board.x = i+1
 		else:
 			# should not be in this else statement
 			print 'What the heck?'
 
-		self.printBoard()
-		return Board(self.size, self.getBoardAsList())
+		# new_board.printBoard()
+		return new_board
 
 	def __swap(self, x1,y1, x2, y2):
 		tmp = self.board[x1][y1]
@@ -101,6 +105,15 @@ class Board:
 	
 	def isSolvable(self):
 		print 'isSolvable() function not implemented yet'
+
+	def __eq__(self, board2):
+		if self.x != board2.x or self.y != board2.y or self.size != board2.size or self.num != board2.num:
+			return False
+		l1 = self.getBoardAsList()
+		l2 = board2.getBoardAsList()
+		if l1 != l2:
+			return False
+		return True
 
 	def printBoard(self):
 		sep = ('+' + '-' * (2 + len(str(self.num)) )) * self.size + '+'

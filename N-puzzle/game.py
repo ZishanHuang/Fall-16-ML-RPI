@@ -36,7 +36,6 @@ def run(size, define, fn):
 			tiles.append(int(raw_input('Enter Number: ')))
 		b1 = board.Board(size, tiles)
 
-
 	# Start game
 	print '---------------------------------------'
 	print 'Started %d-puzzle game' % (size**2 - 1)
@@ -52,6 +51,7 @@ def run(size, define, fn):
 				print 'You quit the game!'
 				break
 			b1 = b1.move(action)
+			b1.printBoard()
 			if b1.wins():
 				print 'You Win!!!'
 				break
@@ -66,6 +66,9 @@ def run(size, define, fn):
 		# Execute the actions
 		for action in actions:
 			b1 = b1.move(action)
+			print '---------------------------------------'
+			print 'moved', action
+			b1.printBoard()
 		if b1.wins():
 			print 'You Win with %s!!!' % fn.upper()
 		else:
@@ -104,6 +107,7 @@ def Astar(board):
 
 	print "ASTAR not implemented"
 	sys.exit(1)
+
 
 def isSolvable(board):
 	"""

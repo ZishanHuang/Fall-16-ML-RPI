@@ -35,12 +35,11 @@ Command line arguments can be added to specify the board size, defining the boar
 
 ###Examples
 
-1. creating a random board of size 4:```$ python game.py -s 4```
+1. creating a random board of size 4: ```$ python game.py -s 4```
 
 2. enter values for a board of size 3 and solve it with astar: ```$ python game.py -d -fn astar```
 
-3. use bfs to solve a random board of size 5
-```$ python game.py -s 5 -fn bfs```
+3. use bfs to solve a random board of size 5: ```$ python game.py --size 5 -fn bfs```
 
 ## Implementing
 
@@ -70,7 +69,7 @@ Look for the `""" ENTER YOUT CODE HERE """` in game.py.
 
 - `isLegal(action)` returns True/False
 
-- `move(action)` moves the empty tile left/right/up/down and returns the new board
+- `move(action)` returns the new board that moved the empty tile left/right/up/down (original board not changed)
 
 - `wins()` returns True/False
 

@@ -72,7 +72,7 @@ def run(size, define, fn):
 		if b1.wins():
 			print 'You Win with %s!!!' % fn.upper()
 		else:
-			print 'You %s did not solve the puzzle :(' % fn.upper()
+			print 'Your %s did not solve the puzzle :(' % fn.upper()
 
 def BFS(board):
 	"""

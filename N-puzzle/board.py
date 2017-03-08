@@ -111,9 +111,7 @@ class Board:
 			return False
 		l1 = self.getBoardAsList()
 		l2 = board2.getBoardAsList()
-		if l1 != l2:
-			return False
-		return True
+		return l1 == l2
 
 	def printBoard(self):
 		sep = ('+' + '-' * (2 + len(str(self.num)) )) * self.size + '+'

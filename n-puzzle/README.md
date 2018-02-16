@@ -14,12 +14,12 @@ Sample 8-puzzle game:
     +---+---+---+       +---+---+---+
 
 ## How to run the game
-###Useful Files
+### Useful Files
 
 - board.py: contains the Board class
 - game.py: main function for running the game
 
-###Instructions
+### Instructions
 To play a random board of size 3, enter the following command:
 
 ```
@@ -33,7 +33,7 @@ Command line arguments can be added to specify the board size, defining the boar
 	-d,  --define               user define the board or not
 	-fn, --function <function>  set the function used to solve the game (default to 'human')
 
-###Examples
+### Examples
 
 1. Creating a random board of size 4: ```$ python game.py -s 4```
 
